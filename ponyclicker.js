@@ -586,12 +586,6 @@ var ponyclicker = (function(){
   function Pluralize2(n, s, s2, fixed, display) { return PrettyNumStatic(n, fixed, display) + ((n==1)?s:s2); }
   function Pluralize(n, s, fixed) { return Pluralize2(n, s, s + 's', fixed, Game.settings.numDisplay); }
   
-  function gen_upgradetype1(item, pSPS, mSPS) { return function(sps, store) { var n = Math.max(store[item]-1,0); sps.pStore[item] += pSPS*n; sps.mStore[item] += mSPS*n; return sps; } }
-  function gen_upgradetype2(item, p, m) { return function(sps, store) { sps.pSPC += p*store[item]; sps.mSPC += m; return sps; } }
-  function gen_upgradetype3(p, m) { return function(sps, store) { sps.pSPS += p; sps.mSPS += m; return sps; } }
-  function gen_finalupgrade(m) { return function(sps, store) { var b = (store[0]+store[1]+CountBuildings(store))*m; for(var i = 0; i < sps.mStore.length; ++i) sps.mStore[i] += b; return sps;} }
-  function gen_muffinupgrade(pSPS, mSPS) { return function(sps, store) { sps.mMuffin += mSPS*((typeof Game !== 'undefined')?Game.muffins:0); return sps; } }
-
   /* upgrade pool object: {
     pSPS, // Global additive bonus to SPS (applied after store)
     mSPS, // Global multiplier to SPS (applied after store)
@@ -605,6 +599,12 @@ var ponyclicker = (function(){
   //
   // -------------------------------- Upgrade generation --------------------------------
   //
+  function gen_upgradetype1(item, pSPS, mSPS) { return function(sps, store) { var n = Math.max(store[item]-1,0); sps.pStore[item] += pSPS*n; sps.mStore[item] += mSPS*n; return sps; } }
+  function gen_upgradetype2(item, p, m) { return function(sps, store) { sps.pSPC += p*store[item]; sps.mSPC += m; return sps; } }
+  function gen_upgradetype3(p, m) { return function(sps, store) { sps.pSPS += p; sps.mSPS += m; return sps; } }
+  function gen_finalupgrade(m) { return function(sps, store) { var b = (store[0]+store[1]+CountBuildings(store))*m; for(var i = 0; i < sps.mStore.length; ++i) sps.mStore[i] += b; return sps;} }
+  function gen_muffinupgrade(pSPS, mSPS) { return function(sps, store, muf) { sps.mMuffin += mSPS*(muf?muf:((typeof Game !== 'undefined')?Game.muffins:0)); return sps; } }
+
   var defcond = function(){ return this.cost < (Game.totalsmiles*1.1)};
   function genprecond(id) { return function() { return (Game.upgradeHash[id] !== undefined) && (this.cost < (Game.totalsmiles*1.1)); } }
   function gencountcond(item, count) { return function() { return Game.store[item] >= count && this.cost < (Game.totalsmiles*1.2)} }
@@ -908,7 +908,7 @@ var ponyclicker = (function(){
     return count;
   }
   // Seperating this out lets us make predictions on what a purchase will do to your SPS
-  function CalcSPS(store, upgrades, cupcakes, docache) {
+  function CalcSPS(store, upgrades, cupcakes, muffins, docache) {
     var res = CalcSPSinit(store);
     
     var obj = {
@@ -923,7 +923,7 @@ var ponyclicker = (function(){
     for(var i = 0; i < res.length; ++i) { obj.pStore[i]=0; obj.mStore[i]=0; } // initialize values
     
     for(var i = 0; i < upgrades.length; ++i) {
-      obj = upgradeList[upgrades[i]].fn(obj, store);
+      obj = upgradeList[upgrades[i]].fn(obj, store, muffins);
       if(!obj || obj.pSPS === undefined) {
         alert("ILLEGAL UPGRADE: " + upgrades[i]);
       }
@@ -1149,7 +1149,7 @@ var ponyclicker = (function(){
         for(var j = 0; j < Store.length; ++j) updatestore_nstore[j] = 0+Game.store[j];
         
         updatestore_nstore[i]+=1;
-        var nSPS = CalcSPS(updatestore_nstore, Game.upgrades, Game.cupcakes, false),
+        var nSPS = CalcSPS(updatestore_nstore, Game.upgrades, Game.cupcakes, Game.muffins, false),
             payPerSmile = Store[i].cost(Game.store[i])/(nSPS - Game.SPS);
         
         if(payPerSmile < minPayPerSmile) {
@@ -1213,7 +1213,7 @@ var ponyclicker = (function(){
     $stat_buildings.html(CountBuildings(Game.store).toFixed(0));
   }
   function UpdateSPS() {
-    Game.SPS = CalcSPS(Game.store, Game.upgrades, Game.cupcakes, true);
+    Game.SPS = CalcSPS(Game.store, Game.upgrades, Game.cupcakes, Game.muffins, true);
     $stat_SPC.html(PrettyNum(Math.floor(Game.SPC)));
     if(Game.SPS > 0) {
       var wither = (apocalypseTime < 0)?0:(1-Math.pow(1-PINKIE_WITHER, Game.pinkies.length - pinkie_freelist.length));
@@ -1384,7 +1384,7 @@ var ponyclicker = (function(){
       for(var i = 0; i < Store.length; ++i) { updateoverlay_nstore[i] = 0+Game.store[i]; } //ensure javascript isn't passing references around for some insane reason
 
       updateoverlay_nstore[item]+=1;
-      var nSPS = CalcSPS(updateoverlay_nstore, Game.upgrades, Game.cupcakes, false),
+      var nSPS = CalcSPS(updateoverlay_nstore, Game.upgrades, Game.cupcakes, Game.muffins, false),
           sps_increase = nSPS - Game.SPS,
           payPerSmile = xcost/(nSPS - Game.SPS),
           increaseText = sps_increase > 0 ? 'will increase your SPS by <b>'+(sps_increase > lowerbound ? PrettyNum(sps_increase) : 'almost nothing')+'</b>' : "<b>won't</b> increase your SPS",
