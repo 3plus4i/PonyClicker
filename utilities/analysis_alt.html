@@ -53,8 +53,12 @@
 <body class="apocalypse">
   <h2>Pony Clicker Analysis</h2>
   <label title="Number of purchase steps to calculate in the optimal playthrough.">
-    <input id="optimalslider" type="range" min="10" max="4000" style="width:400px" onchange="SetSteps(this.value);" onmousemove="document.getElementById('steps').innerHTML=this.value"/> <span id="steps">0</input>
+    <input id="optimalslider" type="range" min="10" max="5000" step="10" style="width:400px" onmousemove="document.getElementById('steps').innerHTML=this.value"> <span id="steps">0</span>
   </label>
+  <label title="Number of cupcakes.">
+    <input id="cupcakes" name="Cupcakes" type="number" value="0">
+  </label>
+  <input type="button" name="Calculate" value="Calculate" onclick="SetSteps();">
   <hr>
   <div id="mainchart"></div>
   <div id="mainupgrades"></div>
@@ -73,11 +77,12 @@
   <script type="text/javascript" src="../ponyclicker.js"></script>
   <script>
   google.load('visualization', '1.1', {packages: ['corechart','line']});
-  google.setOnLoadCallback(drawCharts);
+  //google.setOnLoadCallback(drawCharts);
   
   var $doc = $(document),
       $w = $(window),
-      $steps = $('#steps');
+      $steps = $('#steps'),
+      $cupcakes = $('#cupcakes');
   
   function triangular(n) { return (n*(n-1))/2; } // number of edges in a complete graph of n nodes
   function NeedsMorePonies(store) { return store[1] >= triangular(store[0]); }
@@ -251,6 +256,7 @@
       waitdata.push(Math.round(delta*1000)/1000);
     }
     console.log(game.achievements);
+    console.log("Cupcakes:", game.cupcakes);
     printData();
   }
   function buildChart(id, data, title, subtitle, width, height, log) {
@@ -292,7 +298,7 @@
     data.push('</tr>');
     for(var i = 0; i < shopdata.length; ++i) {
       data.push('<tr><td>'+(i+1)+'</td><td>'+waitdata[i]+'</td><td>'+xdata[i]+'</td>');
-      if(shopdata[i]<0) data.push('<td class="tupgrade">'+(-shopdata[i])+'</td>');
+      if(shopdata[i]<0) data.push('<td class="tupgrade">'+shopdata[i]+'</td>');
       else {
         data.push('<td>'+shopdata[i]+'</td>');
         ++shop[shopdata[i]];
@@ -401,9 +407,10 @@
     data.addRows(dat);
     buildChart('cupcakechart', data, 'Total Smiles After Resets', 'Total smiles after n resets after 24 hours of play', $doc.width()-100, 400);*/
   }
-  function SetSteps(s) {
-    var steps = s|0;
-    CalcSteps(steps, 0);
+  function SetSteps() {
+    console.log($steps.text());
+    var steps = $steps.text()|0;
+    CalcSteps(steps, $cupcakes.val());
     drawCharts();
   }
   
@@ -411,7 +418,6 @@
     localStorage.setItem('analysis_steps', '200');
   var sget = localStorage.getItem('analysis_steps');
   document.getElementById('optimalslider').value = sget;
-  CalcSteps(sget, 0);
   //$w.on('resize',ResizeCanvas);
   </script>
 </body>
