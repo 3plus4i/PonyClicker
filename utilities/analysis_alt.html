@@ -184,9 +184,9 @@
   
   // Create game and bypass the early game
   var game = null,
-      friendship_steps = [1, 3, 15, 66, 153, 276],
-      building_steps = [1, 50, 100, 150, 200],
-      eoh_steps = [1, 6, 20, 40, 80, 160],
+      friendship_steps = [1, 3, 15, 66, 153, 276, 435],
+      building_steps = [1, 50, 100, 150, 200, 300],
+      eoh_steps = [1, 6, 20, 40, 80, 160, 240, 320],
       xdata = [],
       spsdata = [],
       shopdata = [],
@@ -226,18 +226,18 @@
       if(opt>=0) {
         game.store[opt] += 1;
         if(opt == 11) {
-          for(j = 0; j < 6; ++j) {
-            if(game.store[11]>=eoh_steps[j]) EarnAchievement(65+j);
+          for(j = 0; j < 8; ++j) {
+            if(game.store[11]>=eoh_steps[j]) EarnAchievement(73+j);
             else break;
           }
         } else if(opt > 1) {
-          for(j = 0; j < 5; ++j) {
-            if(game.store[opt]>=building_steps[j]) EarnAchievement(10+5*opt+j);
+          for(j = 0; j < 6; ++j) {
+            if(game.store[opt]>=building_steps[j]) EarnAchievement(8+6*opt+j);
             else break;
           }
         } else if(opt == 1) {
-          for(j = 1; j < 6; ++j) {
-            if(game.store[1]>=friendship_steps[j]) EarnAchievement(71+j);
+          for(j = 1; j < 7; ++j) {
+            if(game.store[1]>=friendship_steps[j]) EarnAchievement(82+j);
             else break;
           }
         }
@@ -255,8 +255,6 @@
       shopdata.push(opt);
       waitdata.push(Math.round(delta*1000)/1000);
     }
-    console.log(game.achievements);
-    console.log("Cupcakes:", game.cupcakes);
     printData();
   }
   function buildChart(id, data, title, subtitle, width, height, log) {
@@ -321,7 +319,7 @@
     buildChart('mainchart', data, 'Optimal Game Playthrough', 'Ponyclicker SPS over time', $doc.width()-100, 400);
     for(var i = 0; i < shopdata.length; ++i) {
       if(shopdata[i]<0) {
-        var highlight = (-shopdata[i])>85;
+        var highlight = shopdata[i]<-88;
         var u = ponyclicker.Upgrades[-shopdata[i]];
         $('#mainupgrades').append(
           $(document.createElement('div'))
@@ -408,7 +406,6 @@
     buildChart('cupcakechart', data, 'Total Smiles After Resets', 'Total smiles after n resets after 24 hours of play', $doc.width()-100, 400);*/
   }
   function SetSteps() {
-    console.log($steps.text());
     var steps = $steps.text()|0;
     CalcSteps(steps, $cupcakes.val());
     drawCharts();
