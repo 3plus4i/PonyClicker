@@ -831,7 +831,7 @@ var ponyclicker = (function(){
     '219': { name:"Nevermore", desc: "Reset the game with <b>"+PrettyNumStatic(1000000000000000000000000000000, false, 0)+" smiles</b>.", muffins:8 },
     
     //'229': { name:"Prepare For The End", desc: "Find the secret song reference.", muffins:1 },
-    '230': { name:"What Have You Done", desc: "Buy the mirror pool.", muffins:5, cond:function() { return (Game.upgradeHash['89'] !== undefined); } },
+    '230': { name:"What Have You Done", desc: "Buy the mirror pool.", muffins:5, cond:function() { return (Game.upgradeHash['142'] !== undefined); } },
     '231': { name:"Too Many Pinkie Pies", desc: "Pop <b>10 pinkie clones</b>.", muffins:1, cond:function() { return Game.clonespopped>=10; } },
     '232': { name:"Look, a Birdie!", desc: "Pop <b>100 pinkie clones</b>", muffins:2, cond:function() { return Game.clonespopped>=100; } },
     '233': { name:"Reviewing Is Magic 5", desc: "Pop <b>400 pinkie clones</b>.", muffins:3, cond:function() { return Game.clonespopped>=400; } },
@@ -1095,7 +1095,7 @@ var ponyclicker = (function(){
   var MAX_PINKIES = 50;
   
   function CheckApocalypse() {
-    if(Game.upgradeHash['89'] !== undefined && apocalypseTime == -1) {
+    if(Game.upgradeHash['142'] !== undefined && apocalypseTime == -1) {
       apocalypseTime = new Date().getTime();
       $('#apocalypse')[0].style.opacity = 1;
       $('#mandatory-fun')[0].href = 'https://www.youtube.com/watch?v=19G0I7xHQBM';
