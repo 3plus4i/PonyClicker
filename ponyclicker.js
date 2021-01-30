@@ -6,7 +6,7 @@ var ponyclicker = (function(){
     return Math.log(x) / Math.LN10;
   };
 
-  var $ponyversion = {major:1,minor:0,revision:8};
+  var $ponyversion = {major:1,minor:1,revision:0};
       
   function CreateGame() {
     return {
@@ -251,6 +251,8 @@ var ponyclicker = (function(){
     if(Game.totalsmiles > 1000000000000000000000000) EarnAchievement(217);
     if(Game.totalsmiles > 1000000000000000000000000000) EarnAchievement(218);
     if(Game.totalsmiles > 1000000000000000000000000000000) EarnAchievement(219);
+    if(Game.totalsmiles > 1000000000000000000000000000000000) EarnAchievement(220);
+    if(Game.totalsmiles > 1000000000000000000000000000000000000) EarnAchievement(221);
     
     Game.legacysmiles += Game.totalsmiles;
     Game.legacyclicks += Game.clicks;
@@ -613,6 +615,9 @@ var ponyclicker = (function(){
   function Pluralize2(n, s, s2, fixed, display) { return PrettyNumStatic(n, fixed, display) + ((n==1)?s:s2); }
   function Pluralize(n, s, fixed) { return Pluralize2(n, s, s + 's', fixed, Game.settings.numDisplay); }
   
+  //
+  // -------------------------------- Upgrade generation --------------------------------
+  //
   /* upgrade pool object: {
     pSPS, // Global additive bonus to SPS (applied after store)
     mSPS, // Global multiplier to SPS (applied after store)
@@ -624,9 +629,6 @@ var ponyclicker = (function(){
     mStore // array of multiplicative bonuses to individual store item SPS
   }*/
   
-  //
-  // -------------------------------- Upgrade generation --------------------------------
-  //
   function gen_shopupgrade(item, pSPS, mSPS) { return function(sps, store) { var n = Math.max(store[item]-1,0); sps.pStore[item] += pSPS*n; sps.mStore[item] *= (1+mSPS*n); return sps; } }
   function gen_mshopupgrade(item, mSPS) { return function(sps, store) { sps.mStore[item] *= mSPS; return sps; } }
   function gen_SPCupgrade(item, p, m) { return function(sps, store) { sps.pSPC += p*store[item]; sps.mSPC += m; return sps; } }
@@ -734,71 +736,71 @@ var ponyclicker = (function(){
      '91':{id: 91, cost:2100000000000000000, name:"Clover the Clever's Cloak", desc: "You get 0.0075% more SPS for every building you have.", fn:gen_artifactupgrade(0.000075), cond:defcond },
      '92':{id: 92, cost:161803398874989484820, name:"Crystal Heart", desc: "You get 5% more SPS for every Pony you have.", fn:gen_martifactupgrade(0, 0.05), cond:defcond },
      '93':{id: 93, cost:24142135623730950488, name:"The Fire Of Friendship", desc: "You get 0.5% more SPS for every Friendship you have.", fn:gen_martifactupgrade(1, 0.005), cond:defcond },
-     '94':{id: 94, cost:1000000, name:"Daisy Sandwich", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
-     '95':{id: 95, cost:9000000, name:"Hay Fries", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
-     '96':{id: 96, cost:80000000, name:"Cucumber Sandwiches", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
-     '97':{id: 97, cost:700000000, name:"Pancakes", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
-     '98':{id: 98, cost:6000000000, name:"Hay Burger", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
-     '99':{id: 99, cost:50000000000, name:"Apples", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
-    '100':{id:100, cost:400000000000, name:"S'mores", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
-    '101':{id:101, cost:3000000000000, name:"Filly Guide Cookies", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
-    '102':{id:102, cost:20000000000000, name:"Carrot-Ginger Sandwiches", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
-    '103':{id:103, cost:100000000000000, name:"A Little Glass Of Water", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
-    '104':{id:104, cost:22000000000000000, name:"Plain Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
-    '105':{id:105, cost:33000000000000000, name:"Poppyseed Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
-    '106':{id:106, cost:49500000000000000, name:"Blueberry Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
-    '107':{id:107, cost:74300000000000000, name:"Onion Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
-    '108':{id:108, cost:111400000000000000, name:"Cinnamon Raisin Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
-    '109':{id:109, cost:167100000000000000, name:"French Toast Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
-    '110':{id:110, cost:250600000000000000, name:"Banana Bread Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
-    '111':{id:111, cost:3000000000000000000, name:"Cheese Pastry", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
-    '112':{id:112, cost:6000000000000000000, name:"Chocolate Pastry", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
-    '113':{id:113, cost:12000000000000000000, name:"Cherry Pastry", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
-    '114':{id:114, cost:24000000000000000000, name:"Strawberry Pastry", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
-    '115':{id:115, cost:48000000000000000000, name:"Blueberry Pastry", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
-    '116':{id:116, cost:96000000000000000000, name:"Raspberry Pastry", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
-    '117':{id:117, cost:192000000000000000000, name:"Blackberry Pastry", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
-    '118':{id:118, cost:1300000000000000000000, name:"Apple Cider", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '119':{id:119, cost:6000000000000000000000, name:"Apple Pie", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '120':{id:120, cost:28000000000000000000000, name:"Apple Dumplings", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '121':{id:121, cost:130000000000000000000000, name:"Apple Crisps", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '122':{id:122, cost:600000000000000000000000, name:"Apple Crumblers", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '123':{id:123, cost:2800000000000000000000000, name:"Apple Brown Betty", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '124':{id:124, cost:13000000000000000000000000, name:"Apple Fritter", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '125':{id:125, cost:60000000000000000000000000, name:"Caramel Apple", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '126':{id:126, cost:280000000000000000000000000, name:"Apple Strudel", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '127':{id:127, cost:1300000000000000000000000000, name:"Apple Tart", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '128':{id:128, cost:6000000000000000000000000000, name:"Baked Apples", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '129':{id:129, cost:28000000000000000000000000000, name:"Apple Brioche", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '130':{id:130, cost:130000000000000000000000000000, name:"Apple Cinnamon Crisp", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '131':{id:131, cost:600000000000000000000000000000, name:"Pear Jam", desc: "8% more smiles per second.", fn:gen_SPSupgrade(0, 1.08), cond:defcond },
-    '132':{id:132, cost:9000000000000000000000000000000, name:"Zap Apple Jam", desc: "10% more smiles per second.", fn:gen_SPSupgrade(0, 1.1), cond:defcond },
-    '133':{id:133, cost:90000000000000000000000000000000, name:"Gustave le Grand’s Éclair", desc: "10% more smiles per second.", fn:gen_SPSupgrade(0, 1.1), cond:defcond },
-    '134':{id:134, cost:900000000000000000000000000000000, name:"Donut Joe’s Donutopia", desc: "10% more smiles per second.", fn:gen_SPSupgrade(0, 1.1), cond:defcond },
-    '135':{id:135, cost:9000000000000000000000000000000000, name:"Mulia Mild’s Chocolate Mousse Moose", desc: "10% more smiles per second.", fn:gen_SPSupgrade(0, 1.1), cond:defcond },
-    '136':{id:136, cost:90000000000000000000000000000000000, name:"Marzipan Mascarpone Meringue Madness", desc: "10% more smiles per second.", fn:gen_SPSupgrade(0, 1.1), cond:defcond },
-    '137':{id:137, cost:900000000000000000000000000000000000, name:"Curried Oat Cake", desc: "10% more smiles per second.", fn:gen_SPSupgrade(0, 1.1), cond:defcond },
-    '138':{id:138, cost:9000000000000000000000000000000000000, name:"Saffron Masala’s Grass Sandwich", desc: "10% more smiles per second.", fn:gen_SPSupgrade(0, 1.1), cond:defcond },
-    '139':{id:139, cost:90000000000000000000000000000000000000, name:"Spicy Flat-Noodle Soup", desc: "10% more smiles per second.", fn:gen_SPSupgrade(0, 1.1), cond:defcond },
-    '140':{id:140, cost:900000000000000000000000000000000000000, name:"Ginseng Tea", desc: "10% more smiles per second.", fn:gen_SPSupgrade(0, 1.1), cond:defcond },
-    '141':{id:141, cost:30000000000000000000000000000000000000000, name:"Chancellor Puddinghead's Legendary Pudding", desc: "20% more smiles per second.", fn:gen_SPSupgrade(0, 1.2), cond:defcond },
-    '142':{id:142, cost:1000000000000000000000000000, name:"Mirror Pool", desc: "Everything gets +0.01% SPS for everything else.", fn:gen_finalupgrade(0.0001), cond:defcond },
-    '143':{id:143, cost:7500000000000000000000000000, name:"Mirror Mirror Pool", desc: "Everything gets +0.02% SPS for everything else.", fn:gen_finalupgrade(0.0002),cond:genprecond(142) },
-    '144':{id:144, cost:56000000000000000000000000000, name:"Super Mirror Pool", desc: "Everything gets +0.04% SPS for everything else.", fn:gen_finalupgrade(0.0004),cond:genprecond(143) },
-    '145':{id:145, cost:420000000000000000000000000000, name:"Duper Mirror Pool", desc: "Everything gets +0.07% SPS for everything else.", fn:gen_finalupgrade(0.0007),cond:genprecond(144) },
-    '146':{id:146, cost:3200000000000000000000000000000, name:"Hyper Mirror Pool", desc: "Everything gets +0.1% SPS for everything else.", fn:gen_finalupgrade(0.001),cond:genprecond(145) },
-    '147':{id:147, cost:24000000000000000000000000000000, name:"Ascended Mirror Pool", desc: "Everything gets +0.2% SPS for everything else.", fn:gen_finalupgrade(0.002),cond:genprecond(146) },
-    '148':{id:148, cost:180000000000000000000000000000000, name:"Mega Mirror Pool", desc: "Everything gets +0.4% SPS for everything else.", fn:gen_finalupgrade(0.004),cond:genprecond(147) },
-    '149':{id:149, cost:1300000000000000000000000000000000, name:"Giga Mirror Pool", desc: "Everything gets +0.7% SPS for everything else.", fn:gen_finalupgrade(0.007),cond:genprecond(148) },
-    '150':{id:150, cost:10000000000000000000000000000000000, name:"Ultra Mirror Pool", desc: "Everything gets +1% SPS for everything else.", fn:gen_finalupgrade(0.01),cond:genprecond(149) },
-    '151':{id:151, cost:75000000000000000000000000000000000, name:"Epic Mirror Pool", desc: "Everything gets +2% SPS for everything else.", fn:gen_finalupgrade(0.02),cond:genprecond(150) },
-    '152':{id:152, cost:560000000000000000000000000000000000, name:"Global Mirror Pool", desc: "Everything gets +4% SPS for everything else.", fn:gen_finalupgrade(0.04),cond:genprecond(151) },
-    '153':{id:153, cost:4200000000000000000000000000000000000, name:"Solar Mirror Pool", desc: "Everything gets +7% SPS for everything else.", fn:gen_finalupgrade(0.07),cond:genprecond(152) },
-    '154':{id:154, cost:32000000000000000000000000000000000000, name:"Galactic Mirror Pool", desc: "Everything gets +10% SPS for everything else.", fn:gen_finalupgrade(0.1),cond:genprecond(153) },
-    '155':{id:155, cost:240000000000000000000000000000000000000, name:"Universal Mirror Pool", desc: "Everything gets +20% SPS for everything else.", fn:gen_finalupgrade(0.2),cond:genprecond(154) },
-    '156':{id:156, cost:1800000000000000000000000000000000000000, name:"Cosmic Mirror Pool", desc: "Everything gets +40% SPS for everything else.", fn:gen_finalupgrade(0.4),cond:genprecond(155) },
-    '157':{id:157, cost:13000000000000000000000000000000000000000, name:"Eternal Mirror Pool", desc: "Everything gets +70% SPS for everything else.", fn:gen_finalupgrade(0.7),cond:genprecond(156) },
-    '158':{id:158, cost:100000000000000000000000000000000000000000, name:"Final Mirror Pool", desc: "Everything gets +100% SPS for everything else.", fn:gen_finalupgrade(1),cond:genprecond(157) },
+     '94':{id: 94, cost:200000, name:"Daisy Sandwich", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
+     '95':{id: 95, cost:400000, name:"Hay Fries", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
+     '96':{id: 96, cost:800000, name:"Cucumber Sandwiches", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
+     '97':{id: 97, cost:1600000, name:"Pancakes", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
+     '98':{id: 98, cost:3200000, name:"Hay Burger", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
+     '99':{id: 99, cost:6400000, name:"Apples", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
+    '100':{id:100, cost:12800000, name:"S'mores", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
+    '101':{id:101, cost:25600000, name:"Filly Guide Cookies", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
+    '102':{id:102, cost:51200000, name:"Carrot-Ginger Sandwiches", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
+    '103':{id:103, cost:102400000, name:"A Little Glass Of Water", desc: "2% more smiles per second.", fn:gen_SPSupgrade(0, 1.02), cond:defcond },
+    '104':{id:104, cost:1000000000, name:"Plain Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '105':{id:105, cost:3200000000, name:"Poppyseed Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '106':{id:106, cost:10000000000, name:"Blueberry Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '107':{id:107, cost:32000000000, name:"Onion Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '108':{id:108, cost:100000000000, name:"Cinnamon Raisin Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '109':{id:109, cost:320000000000, name:"French Toast Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '110':{id:110, cost:1000000000000, name:"Banana Bread Bagels", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '111':{id:111, cost:3200000000000, name:"Cheese Pastry", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '112':{id:112, cost:10000000000000, name:"Chocolate Pastry", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '113':{id:113, cost:32000000000000, name:"Cherry Pastry", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '114':{id:114, cost:100000000000000, name:"Strawberry Pastry", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '115':{id:115, cost:320000000000000, name:"Blueberry Pastry", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '116':{id:116, cost:1000000000000000, name:"Raspberry Pastry", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '117':{id:117, cost:3200000000000000, name:"Blackberry Pastry", desc: "3% more smiles per second.", fn:gen_SPSupgrade(0, 1.03), cond:defcond },
+    '118':{id:118, cost:50000000000000000, name:"Apple Cider", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '119':{id:119, cost:85000000000000000, name:"Apple Pie", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '120':{id:120, cost:140000000000000000, name:"Apple Dumplings", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '121':{id:121, cost:250000000000000000, name:"Apple Crisps", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '122':{id:122, cost:420000000000000000, name:"Apple Crumblers", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '123':{id:123, cost:710000000000000000, name:"Apple Brown Betty", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '124':{id:124, cost:1200000000000000000, name:"Apple Fritter", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '125':{id:125, cost:2100000000000000000, name:"Caramel Apple", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '126':{id:126, cost:3500000000000000000, name:"Apple Strudel", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '127':{id:127, cost:6000000000000000000, name:"Apple Tart", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '128':{id:128, cost:10000000000000000000, name:"Baked Apples", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '129':{id:129, cost:17000000000000000000, name:"Apple Brioche", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '130':{id:130, cost:29000000000000000000, name:"Apple Cinnamon Crisp", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '131':{id:131, cost:50000000000000000000, name:"Pear Jam", desc: "4% more smiles per second.", fn:gen_SPSupgrade(0, 1.04), cond:defcond },
+    '132':{id:132, cost:100000000000000000000000000, name:"Zap Apple Jam", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
+    '133':{id:133, cost:4000000000000000000000000000, name:"Gustave le Grand’s Éclair", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
+    '134':{id:134, cost:160000000000000000000000000000, name:"Donut Joe’s Donutopia", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
+    '135':{id:135, cost:6400000000000000000000000000000, name:"Mulia Mild’s Chocolate Mousse Moose", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
+    '136':{id:136, cost:256000000000000000000000000000000, name:"Marzipan Mascarpone Meringue Madness", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
+    '137':{id:137, cost:10000000000000000000000000000000000, name:"Curried Oat Cake", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
+    '138':{id:138, cost:400000000000000000000000000000000000, name:"Saffron Masala’s Grass Sandwich", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
+    '139':{id:139, cost:16000000000000000000000000000000000000, name:"Spicy Flat-Noodle Soup", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
+    '140':{id:140, cost:640000000000000000000000000000000000000, name:"Ginseng Tea", desc: "5% more smiles per second.", fn:gen_SPSupgrade(0, 1.05), cond:defcond },
+    '141':{id:141, cost:30000000000000000000000000000000000000000, name:"Chancellor Puddinghead's Legendary Pudding", desc: "10% more smiles per second.", fn:gen_SPSupgrade(0, 1.1), cond:defcond },
+    '142':{id:142, cost:2000000000000000000000000000, name:"Mirror Pool", desc: "Everything gets +0,01% SPS for everything else.", fn:gen_finalupgrade(0.0001), cond:defcond },
+    '143':{id:143, cost:15000000000000000000000000000, name:"Mirror Mirror Pool", desc: "Everything gets +0,02% SPS for everything else.", fn:gen_finalupgrade(0.0002), cond:genprecond(142) },
+    '144':{id:144, cost:110000000000000000000000000000, name:"Super Mirror Pool", desc: "Everything gets +0,04% SPS for everything else.", fn:gen_finalupgrade(0.0004), cond:genprecond(143) },
+    '145':{id:145, cost:840000000000000000000000000000, name:"Duper Mirror Pool", desc: "Everything gets +0,07% SPS for everything else.", fn:gen_finalupgrade(0.0007), cond:genprecond(144) },
+    '146':{id:146, cost:6300000000000000000000000000000, name:"Hyper Mirror Pool", desc: "Everything gets +0,1% SPS for everything else.", fn:gen_finalupgrade(0.001), cond:genprecond(145) },
+    '147':{id:147, cost:47000000000000000000000000000000, name:"Ascended Mirror Pool", desc: "Everything gets +0,2% SPS for everything else.", fn:gen_finalupgrade(0.002), cond:genprecond(146) },
+    '148':{id:148, cost:360000000000000000000000000000000, name:"Mega Mirror Pool", desc: "Everything gets +0,4% SPS for everything else.", fn:gen_finalupgrade(0.004), cond:genprecond(147) },
+    '149':{id:149, cost:2700000000000000000000000000000000, name:"Giga Mirror Pool", desc: "Everything gets +0,7% SPS for everything else.", fn:gen_finalupgrade(0.007), cond:genprecond(148) },
+    '150':{id:150, cost:20000000000000000000000000000000000, name:"Ultra Mirror Pool", desc: "Everything gets +1% SPS for everything else.", fn:gen_finalupgrade(0.01), cond:genprecond(149) },
+    '151':{id:151, cost:150000000000000000000000000000000000, name:"Epic Mirror Pool", desc: "Everything gets +2% SPS for everything else.", fn:gen_finalupgrade(0.02), cond:genprecond(150) },
+    '152':{id:152, cost:1100000000000000000000000000000000000, name:"Global Mirror Pool", desc: "Everything gets +4% SPS for everything else.", fn:gen_finalupgrade(0.04), cond:genprecond(151) },
+    '153':{id:153, cost:8400000000000000000000000000000000000, name:"Solar Mirror Pool", desc: "Everything gets +7% SPS for everything else.", fn:gen_finalupgrade(0.07), cond:genprecond(152) },
+    '154':{id:154, cost:63000000000000000000000000000000000000, name:"Galactic Mirror Pool", desc: "Everything gets +10% SPS for everything else.", fn:gen_finalupgrade(0.1), cond:genprecond(153) },
+    '155':{id:155, cost:470000000000000000000000000000000000000, name:"Universal Mirror Pool", desc: "Everything gets +20% SPS for everything else.", fn:gen_finalupgrade(0.2), cond:genprecond(154) },
+    '156':{id:156, cost:3600000000000000000000000000000000000000, name:"Cosmic Mirror Pool", desc: "Everything gets +40% SPS for everything else.", fn:gen_finalupgrade(0.4), cond:genprecond(155) },
+    '157':{id:157, cost:27000000000000000000000000000000000000000, name:"Eternal Mirror Pool", desc: "Everything gets +70% SPS for everything else.", fn:gen_finalupgrade(0.7), cond:genprecond(156) },
+    '158':{id:158, cost:200000000000000000000000000000000000000000, name:"Final Mirror Pool", desc: "Everything gets +100% SPS for everything else.", fn:gen_finalupgrade(1), cond:genprecond(157) },
   };
 
   var curUpgradeList = [];
@@ -819,8 +821,8 @@ var ponyclicker = (function(){
     '207': { name:"Wheel of Friendship", desc: "Spin the ponies.", muffins:1, cond:function() { return Math.abs(vangle)>0.05; } },
     //'208': { name:"Centrifuge of Friendship", desc: "Spin the ponies <b>really fast</b>.", muffins:2, cond:function() { return Math.abs(vangle)>3; } },
     '209': { name:"Obliviate", desc: "Reset the game <b>once</b>.", muffins:1, cond:function() { return Game.resets>0; } },
-    '210': { name:"Zeeky Boogy Doog", desc: "Reset the game <b>10 times</b>.", muffins:5, cond:function() { return Game.resets>=10; } },
-    '211': { name:"September", desc: "Reset the game <b>20 times</b>.", muffins:10, cond:function() { return Game.resets>=20; } },
+    '210': { name:"Zeeky Boogy Doog", desc: "Reset the game <b>5 times</b>.", muffins:5, cond:function() { return Game.resets>=5; } },
+    '211': { name:"September", desc: "Reset the game <b>10 times</b>.", muffins:10, cond:function() { return Game.resets>=10; } },
     '212': { name:"Zero", desc: "Reset the game with <b>"+PrettyNumStatic(1000000000, false, 0)+" smiles</b>.", muffins:1 },
     '213': { name:"Nada", desc: "Reset the game with <b>"+PrettyNumStatic(1000000000000, false, 0)+" smiles</b>.", muffins:2 },
     '214': { name:"Zilch", desc: "Reset the game with <b>"+PrettyNumStatic(1000000000000000, false, 0)+" smiles</b>.", muffins:3 },
@@ -829,12 +831,14 @@ var ponyclicker = (function(){
     '217': { name:"Nothing", desc: "Reset the game with <b>"+PrettyNumStatic(1000000000000000000000000, false, 0)+" smiles</b>.", muffins:6 },
     '218': { name:"Oblivion", desc: "Reset the game with <b>"+PrettyNumStatic(1000000000000000000000000000, false, 0)+" smiles</b>.", muffins:7 },
     '219': { name:"Nevermore", desc: "Reset the game with <b>"+PrettyNumStatic(1000000000000000000000000000000, false, 0)+" smiles</b>.", muffins:8 },
+    '220': { name:"Back to The Start", desc: "Reset the game with <b>"+PrettyNumStatic(1000000000000000000000000000000000, false, 0)+" smiles</b>.", muffins:9 },
+    '221': { name:"Aren't You Used to It By Now?", desc: "Reset the game with <b>"+PrettyNumStatic(1000000000000000000000000000000000000, false, 0)+" smiles</b>.", muffins:10 },
     
     //'229': { name:"Prepare For The End", desc: "Find the secret song reference.", muffins:1 },
     '230': { name:"What Have You Done", desc: "Buy the mirror pool.", muffins:5, cond:function() { return (Game.upgradeHash['142'] !== undefined); } },
     '231': { name:"Too Many Pinkie Pies", desc: "Pop <b>10 pinkie clones</b>.", muffins:1, cond:function() { return Game.clonespopped>=10; } },
-    '232': { name:"Look, a Birdie!", desc: "Pop <b>100 pinkie clones</b>", muffins:2, cond:function() { return Game.clonespopped>=100; } },
-    '233': { name:"Reviewing Is Magic 5", desc: "Pop <b>400 pinkie clones</b>.", muffins:3, cond:function() { return Game.clonespopped>=400; } },
+    '232': { name:"Look, a Birdie!", desc: "Pop <b>50 pinkie clones</b>", muffins:2, cond:function() { return Game.clonespopped>=50; } },
+    '233': { name:"Reviewing Is Magic 5", desc: "Pop <b>200 pinkie clones</b>.", muffins:3, cond:function() { return Game.clonespopped>=200; } },
     '234': { name:"Fixer Upper", desc: "Buy all the upgrades.", muffins:20, cond:function() { return Game.upgrades.length==Object.keys(upgradeList).length; }},
     
     '255': { name:"Completionist", desc: "Get all the achievements.", muffins:100}
@@ -1885,9 +1889,7 @@ var ponyclicker = (function(){
 
   $('#manualsave').on('click',function(){
     EarnAchievement(200);
-    //console.log("30 Ponies: "+Math.floor(Store[0].cost(30)));
-    //console.log(triangular(30)+" Friendships: "+Math.floor(Store[1].cost(triangular(30)-1)));
-    //console.log("320 EoH: "+Math.floor(Store[11].cost(320)));
+    //console.log(achievementList);
     SaveGame();
   });
   $menu.find('label').children().on('click',GetSettings);
